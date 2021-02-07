@@ -360,13 +360,13 @@ public class Main {
 	 */
 	public static void archivoDropBox(FileOutputStream archivoFinal) 
 			throws UploadErrorException, DbxException, IOException {
-		//se genera una fecha para asi nombrar el archivo de ese d�a
+		//se genera una fecha para asi nombrar el archivo de ese día
 		Date fecha = new Date();
 		SimpleDateFormat formatter = new SimpleDateFormat("dd:MM:yyyy");
 		String nombreArchivo = "Respaldo-GTDENT-" + formatter.format(fecha) + ".xlsx";
 
 		//se accede a dropbox quitando el archivo anterior y agregando el nuevo con la
-		//fecha nueva del d�a del respaldo
+		//fecha nueva del día del respaldo
 		InputStream in;
 		try {
 			client.files().deleteV2("/GT DENT");
