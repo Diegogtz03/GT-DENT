@@ -11,6 +11,7 @@ import javax.swing.border.LineBorder;
 import java.awt.Window.Type;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.concurrent.TimeUnit;
 import java.awt.Color;
 import java.awt.Dimension;
 
@@ -75,7 +76,19 @@ public class Ventana_registro extends JFrame {
 	private JRadioButton radioBtnFecha;
 	private JRadioButton radioBtnNombre;
 	private JTable table;
-	private static String path = "/Users/diegogutierrez/Desktop/TEC 5/Info III/Imagenes Programa/";
+	//private static String path = "/Users/diegogutierrez/Desktop/TEC 5/Info III/Imagenes Programa/";
+	private static String path = "C:/Program Files (x86)/GTDent/Images/";
+	
+	Toolkit toolkit =  Toolkit.getDefaultToolkit();
+	private Dimension screenSize = toolkit.getScreenSize();
+	private double width = screenSize.width * 1.72;
+	private double height = screenSize.height * 1.72;
+	private int frame_width_size = (int)((width * 57.08) / 100);
+	private int frame_height_size = (int)((height * 52.05) / 100) + 30;
+	private int search_box_w = (int)((frame_width_size * 13.26) / 100);
+	private int search_box_h = (int)((frame_height_size * 4.8) / 100);
+	private int btn_w = (int)((frame_width_size * 7.6) / 100);
+	private int btn_h = (int)((frame_height_size * 7.04) / 100);
 
 	/**
 	 * Lanzar la aplicacion
@@ -106,21 +119,21 @@ public class Ventana_registro extends JFrame {
 		setBackground(Color.LIGHT_GRAY);
 		setTitle("REGISTRO");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 1644, 937);
+		setBounds(100, 100, frame_width_size, frame_height_size);
 		setLocation(dim.width/2 - getSize().width/2, dim.height/2 - getSize().height/2);
 		contentPane = new JPanel() {
+
 			private static final long serialVersionUID = 1L;
 
-			// extending the paintComponent method to set an image as a desired background
-			public void paintComponent( Graphics g ){
-				super.paintComponent(g);
-				Graphics2D g2d = (Graphics2D) g;
-				try {
-					InputStream image = new FileInputStream(path + "fondo 3.png");
-					BufferedImage src;
-					try {
-						src = ImageIO.read(image);
-						g2d.drawImage(src, 0, 0, null);
+			public void paintComponent( Graphics g ) {
+				  super.paintComponent(g);
+				  Graphics2D g2d = (Graphics2D) g;
+				  try {
+					  InputStream image = new FileInputStream(path + "fondo 3.png");
+					  BufferedImage src;
+					  try {
+						src = (BufferedImage) ImageIO.read(image);
+						g2d.drawImage(src, 0, 0, frame_width_size, frame_height_size, null);
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
@@ -129,20 +142,25 @@ public class Ventana_registro extends JFrame {
 				}
 			}
 		};
+
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 	
 		JLabel lblNombre = new JLabel("Nombre");
-		lblNombre.setFont(new Font("Lucida Grande", Font.PLAIN, 17));
-		lblNombre.setBounds(137, 261, 77, 18);
+		lblNombre.setFont(new Font("Lucida Grande", Font.BOLD, 14));
+		lblNombre.setBounds((int)((frame_width_size * 8.33) / 100), (int)((frame_height_size * 27.85) / 100), (int)((frame_width_size * 4.68) / 100), (int)((frame_height_size * 1.92) / 100));
 		contentPane.add(lblNombre);
 		
 		JScrollPane scrollPane_registro = new JScrollPane();
 		scrollPane_registro.setViewportBorder(new SoftBevelBorder(BevelBorder.LOWERED, Color.DARK_GRAY, Color.WHITE, Color.DARK_GRAY, Color.WHITE));
-		scrollPane_registro.setBounds(656, 176, 957, 591);
+		scrollPane_registro.setBounds((int)((frame_width_size * 39.9) / 100), (int)((frame_height_size * 18.78) / 100), (int)((frame_width_size * 58.21) / 100), (int)((frame_height_size * 63.1) / 100));
 		contentPane.add(scrollPane_registro);
 		
-		table = new JTable();
+		table = new JTable() {
+			public boolean isCellEditable(int row, int column) {
+		        return false;
+		    }
+		};
 		table.setBackground(Color.WHITE);
 		table.setRowSelectionAllowed(false);
 		table.setGridColor(Color.BLACK);
@@ -161,7 +179,7 @@ public class Ventana_registro extends JFrame {
 		
 		JLabel lblBuscar = new JLabel("Buscar Paciente");
 		lblBuscar.setFont(new Font("Apple Braille", Font.PLAIN, 14));
-		lblBuscar.setBounds(827, 141, 127, 18);
+		lblBuscar.setBounds((int)((frame_width_size * 50.3) / 100), (int)((frame_height_size * 15.05) / 100), (int)((frame_width_size * 7.73) / 100), (int)((frame_height_size * 1.92) / 100));
 		contentPane.add(lblBuscar);
 		
 		textField_search = new RoundJTextField(15);
@@ -186,7 +204,7 @@ public class Ventana_registro extends JFrame {
 				}
 			}
 		});
-		textField_search.setBounds(960, 126, 475, 45);
+		textField_search.setBounds((int)((frame_width_size * 58.39) / 100), (int)((frame_height_size * 13.45) / 100), (int)((frame_width_size * 28.89) / 100), search_box_h);
 		contentPane.add(textField_search);
 		textField_search.setColumns(10);
 		
@@ -194,60 +212,60 @@ public class Ventana_registro extends JFrame {
 		lblPaciente.setForeground(new Color(0, 0, 0));
 		lblPaciente.setFont(new Font("Mishafi Gold", Font.PLAIN, 30));
 		lblPaciente.setHorizontalAlignment(SwingConstants.CENTER);
-		lblPaciente.setBounds(212, 141, 189, 50);
+		lblPaciente.setBounds((int)((frame_width_size * 12.89) / 100), (int)((frame_height_size * 15.05) / 100), (int)((frame_width_size * 11.5) / 100), (int)((frame_height_size * 5.34) / 100));
 		contentPane.add(lblPaciente);
 		
 		textField_nombre = new RoundJTextField(15);
 		textField_nombre.setBackground(new Color(255, 235, 205));
-		textField_nombre.setBounds(226, 246, 218, 45);
+		textField_nombre.setBounds((int)((frame_width_size * 13.75) / 100), (int)((frame_height_size * 26.25) / 100), search_box_w, search_box_h);
 		contentPane.add(textField_nombre);
 		textField_nombre.setColumns(10);
 		
 		JLabel lblNewLabel = new JLabel("Fecha de Nacimiento");
-		lblNewLabel.setFont(new Font("Lucida Grande", Font.BOLD, 15));
-		lblNewLabel.setBounds(66, 313, 155, 45);
+		lblNewLabel.setFont(new Font("Lucida Grande", Font.BOLD, 11));
+		lblNewLabel.setBounds((int)((frame_width_size * 4.01) / 100), (int)((frame_height_size * 33.4) / 100), (int)((frame_width_size * 9.43) / 100), (int)((frame_height_size * 4.80) / 100));
 		contentPane.add(lblNewLabel);
 		
 		textField_nacimiento = new RoundJTextField(15);
 		textField_nacimiento.setBackground(new Color(255, 235, 205));
-		textField_nacimiento.setBounds(226, 314, 218, 45);
+		textField_nacimiento.setBounds((int)((frame_width_size * 13.75) / 100), (int)((frame_height_size * 33.51) / 100), search_box_w, search_box_h);
 		contentPane.add(textField_nacimiento);
 		textField_nacimiento.setColumns(10);
 		
 		JLabel lblEdad = new JLabel("Edad");
-		lblEdad.setFont(new Font("Lucida Grande", Font.BOLD, 17));
-		lblEdad.setBounds(150, 398, 61, 16);
+		lblEdad.setFont(new Font("Lucida Grande", Font.BOLD, 15));
+		lblEdad.setBounds((int)((frame_width_size * 9.12) / 100), (int)((frame_height_size * 42.48) / 100), (int)((frame_width_size * 3.71) / 100), (int)((frame_height_size * 1.81) / 100));
 		contentPane.add(lblEdad);
 		
 		textField_edad = new RoundJTextField(15);
 		textField_edad.setBackground(new Color(255, 235, 205));
-		textField_edad.setBounds(225, 383, 222, 45);
+		textField_edad.setBounds((int)((frame_width_size * 13.67) / 100), (int)((frame_height_size * 40.88) / 100), search_box_w, search_box_h);
 		contentPane.add(textField_edad);
 		textField_edad.setColumns(10);
 		
 		JLabel lblNewLabel_1 = new JLabel("Correo");
-		lblNewLabel_1.setFont(new Font("Lucida Grande", Font.BOLD, 17));
-		lblNewLabel_1.setBounds(140, 468, 61, 16);
+		lblNewLabel_1.setFont(new Font("Lucida Grande", Font.BOLD, 15));
+		lblNewLabel_1.setBounds((int)((frame_width_size * 8.52) / 100), (int)((frame_height_size * 49.95) / 100), (int)((frame_width_size * 3.71) / 100) + 15, (int)((frame_height_size * 1.81) / 100));
 		contentPane.add(lblNewLabel_1);
 		
 		textField_correo = new RoundJTextField(15);
 		textField_correo.setBackground(new Color(255, 235, 205));
-		textField_correo.setBounds(223, 457, 226, 45);
+		textField_correo.setBounds((int)((frame_width_size * 13.56) / 100), (int)((frame_height_size * 48.77) / 100), search_box_w, search_box_h);
 		contentPane.add(textField_correo);
 		textField_correo.setColumns(10);
 		
 		JLabel lblTelefono = new JLabel("Telefono");
-		lblTelefono.setFont(new Font("Lucida Grande", Font.BOLD, 17));
-		lblTelefono.setBounds(123, 546, 77, 16);
+		lblTelefono.setFont(new Font("Lucida Grande", Font.BOLD, 15));
+		lblTelefono.setBounds((int)((frame_width_size * 7.48) / 100), (int)((frame_height_size * 58.27) / 100), (int)((frame_width_size * 4.68) / 100) + 10, (int)((frame_height_size * 1.8) / 100));
 		contentPane.add(lblTelefono);
 		
 		textField_telefono = new RoundJTextField(15);
 		textField_telefono.setBackground(new Color(255, 235, 205));
-		textField_telefono.setBounds(222, 533, 226, 45);
+		textField_telefono.setBounds((int)((frame_width_size * 13.50) / 100), (int)((frame_height_size * 56.88) / 100), search_box_w, search_box_h);
 		contentPane.add(textField_telefono);
 		textField_telefono.setColumns(10);
 		
-		JButton btnRegistar = new JButton("REGISTAR");
+		JButton btnRegistar = new JButton("REGISTRAR");
 		btnRegistar.setBackground(Color.WHITE);
 		btnRegistar.setBackground(UIManager.getColor("Button.background"));
 		btnRegistar.addActionListener(new ActionListener() {
@@ -258,7 +276,7 @@ public class Ventana_registro extends JFrame {
 				}
 			}
 		});
-		btnRegistar.setBounds(73, 641, 125, 66);
+		btnRegistar.setBounds((int)((frame_width_size * 4.44) / 100), (int)((frame_height_size * 68.41) / 100), btn_w, btn_h);
 		contentPane.add(btnRegistar);
 		
 		JButton btnAcrualizar = new JButton("ACTUALIZAR");
@@ -281,7 +299,7 @@ public class Ventana_registro extends JFrame {
 				}
 			}
 		});
-		btnAcrualizar.setBounds(258, 641, 125, 66);
+		btnAcrualizar.setBounds((int)((frame_width_size * 15.69) / 100), (int)((frame_height_size * 68.41) / 100), btn_w+5, btn_h);
 		contentPane.add(btnAcrualizar);
 		
 		JButton btnNuevo = new JButton("NUEVO");
@@ -291,7 +309,7 @@ public class Ventana_registro extends JFrame {
 				NuevoPaciente();
 			}
 		});
-		btnNuevo.setBounds(441, 641, 125, 66);
+		btnNuevo.setBounds((int)((frame_width_size * 26.82) / 100), (int)((frame_height_size * 68.41) / 100), btn_w, btn_h);
 		contentPane.add(btnNuevo);
 		
 		JButton btnNewButton = new JButton("<");
@@ -304,13 +322,13 @@ public class Ventana_registro extends JFrame {
 				ProgramaMama.getFrmExpodent().setVisible(true);
 			}
 		});
-		btnNewButton.setBounds(35, 23, 61, 60);
+		btnNewButton.setBounds((int)((frame_width_size * 2.13) / 100), (int)((frame_height_size * 2.45) / 100), (int)((frame_width_size * 3.71) / 100), (int)((frame_height_size * 6.4) / 100));
 		contentPane.add(btnNewButton);
 		
 		JLabel lblPacientesRegistrados = new JLabel("PACIENTES REGISTRADOS");
 		lblPacientesRegistrados.setForeground(new Color(255, 255, 224));
-		lblPacientesRegistrados.setFont(new Font("Lucida Grande", Font.PLAIN, 30));
-		lblPacientesRegistrados.setBounds(988, 48, 385, 66);
+		lblPacientesRegistrados.setFont(new Font("Lucida Grande", Font.PLAIN, 25));
+		lblPacientesRegistrados.setBounds((int)((frame_width_size * 60.1) / 100), (int)((frame_height_size * 5.12) / 100)+8, (int)((frame_width_size * 25.42) / 100), btn_h);
 		contentPane.add(lblPacientesRegistrados);
 		
 		radioBtnNombre = new JRadioButton("Nombre");
@@ -321,7 +339,7 @@ public class Ventana_registro extends JFrame {
 			}
 		});
 		radioBtnNombre.setSelected(true);
-		radioBtnNombre.setBounds(1453, 120, 141, 23);
+		radioBtnNombre.setBounds((int)((frame_width_size * 88.38) / 100), (int)((frame_height_size * 12.81) / 100), (int)((frame_width_size * 8.58) / 100), (int)((frame_height_size * 2.45) / 100));
 		contentPane.add(radioBtnNombre);
 		
 		radioBtnFecha = new JRadioButton("Fecha Nacimiento");
@@ -331,7 +349,7 @@ public class Ventana_registro extends JFrame {
 				radioBtnNombre.setSelected(false);	
 			}
 		});
-		radioBtnFecha.setBounds(1453, 148, 160, 23);
+		radioBtnFecha.setBounds((int)((frame_width_size * 88.38) / 100), (int)((frame_height_size * 15.8) / 100), (int)((frame_width_size * 9.73) / 100), (int)((frame_height_size * 2.45) / 100));
 		contentPane.add(radioBtnFecha);
 		
 		ButtonGroup botones = new ButtonGroup();
@@ -419,12 +437,12 @@ public class Ventana_registro extends JFrame {
 	 */
 	public void resizeColumns() {
 		table.getColumnModel().getColumn(2).setHeaderValue("fecha de nacimiento");
-		table.getColumnModel().getColumn(0).setPreferredWidth(25);
-		table.getColumnModel().getColumn(1).setPreferredWidth(186);
-		table.getColumnModel().getColumn(2).setPreferredWidth(206);
-		table.getColumnModel().getColumn(3).setPreferredWidth(49);
-		table.getColumnModel().getColumn(4).setPreferredWidth(196);
-		table.getColumnModel().getColumn(4).setPreferredWidth(236);
+		table.getColumnModel().getColumn(0).setPreferredWidth(35);
+		table.getColumnModel().getColumn(1).setPreferredWidth(166);
+		table.getColumnModel().getColumn(2).setPreferredWidth(186);
+		table.getColumnModel().getColumn(3).setPreferredWidth(29);
+		table.getColumnModel().getColumn(4).setPreferredWidth(176);
+		table.getColumnModel().getColumn(4).setPreferredWidth(216);
 	}
 	
 	
@@ -481,7 +499,7 @@ public class Ventana_registro extends JFrame {
 			}
 			
 			//se checa que la fecha quede con el formato dd/mmm/aaaa (mes con letras)
-			if(fNacimiento.toCharArray().length != 11 && !validacion) {
+			if(fNacimiento.trim().toCharArray().length != 11 && !validacion) {
 				int result = JOptionPane.showConfirmDialog(contentPane, "La fecha puede estar en otro formato al conocido,\n¿Desea continuar?", "alerta", JOptionPane.YES_NO_OPTION);
 				
 				//si se elige dejar el formato erroneo se puede seleccionar
