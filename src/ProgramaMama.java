@@ -1,5 +1,5 @@
 /**
- * @author Diego Guti�rrez
+ * @author Diego Gutiérrez
  */
 
 package database;
@@ -28,6 +28,7 @@ import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.Color;
 import java.awt.Dimension;
 
@@ -52,11 +53,20 @@ public class ProgramaMama {
 	private JButton btnExpediente;
 	private JButton btnReceta;
 	private JButton btnRespaldo;
-	private static String path = "/Users/diegogutierrez/Desktop/TEC 5/Info III/Imagenes Programa/";
+	//private static String path= "/Users/diegogutierrez/Desktop/TEC 5/Info III/Imagenes Programa/";
+	private static String path= "C:/Program Files (x86)/GTDent/Images/";
+	Toolkit toolkit =  Toolkit.getDefaultToolkit();
+	private Dimension screenSize = toolkit.getScreenSize();
+	private double width = screenSize.width * 1.72;
+	private double height = screenSize.height * 1.72;
+	private int frame_width_size = (int)((width * 43.23) / 100) + 10;
+	private int frame_height_size = (int)((height * 40.61) / 100) + 45;
+	private int button_height = (int)((frame_height_size * 49.25) / 100);
+	private int button_width = (int)((frame_width_size * 21.69) / 100);
+	private int button_y = (int)((frame_height_size * 27.36) / 100);
 	
-
-	/**
-	 * Se lanza la aplicacion
+ 	 /**
+	 *Se lanza la aplicacion
 	 */
 	public static void main(String[] args) throws Exception{
 		EventQueue.invokeLater(new Runnable() {
@@ -79,6 +89,7 @@ public class ProgramaMama {
 	 */
 	public ProgramaMama() throws SQLException {
 		Main.getConnection();
+		Main.reseedValuesSequence();
 		initialize();
 	}
 
@@ -89,20 +100,21 @@ public class ProgramaMama {
 		setFrmExpodent(new JFrame());
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 		getFrmExpodent().setBackground(new Color(253, 245, 230));
-		getFrmExpodent().setContentPane(new JLabel(new ImageIcon(path + "Pantalla Principal.png")));
+		//getFrmExpodent().setContentPane(new JLabel(new ImageIcon(path + "Pantalla Principal.png")));
 		getFrmExpodent().getContentPane().setBackground(Color.WHITE);
 		getFrmExpodent().setFont(new Font("Apple Braille", Font.PLAIN, 14));
 		getFrmExpodent().setResizable(false);
 		getFrmExpodent().setTitle("GT DENT");
-		getFrmExpodent().setBounds(100, 100, 1240, 755);
-		//getFrmExpodent().setBounds(100, 100, 587, 323);
+		getFrmExpodent().setBounds(100, 100, frame_width_size, frame_height_size);
+		ImageIcon icon = new ImageIcon(path + "Pantalla Principal.png");  
+		Image newimg = icon.getImage().getScaledInstance(frame_width_size, frame_height_size, java.awt.Image.SCALE_SMOOTH);
+		getFrmExpodent().setContentPane(new JLabel(new ImageIcon(newimg)));
 		getFrmExpodent().setLocation(dim.width/2 - getFrmExpodent().getSize().width/2, dim.height/2- getFrmExpodent().getSize().height/2);
 		getFrmExpodent().setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		getFrmExpodent().getContentPane().setLayout(null);
 		
 	
 		btn_registro = new JButton("");
-		btn_registro.setIcon(new ImageIcon(path + "btn_registro bien.png"));
 		btn_registro.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
@@ -119,12 +131,15 @@ public class ProgramaMama {
 				} 
 			}
 		});
-		btn_registro.setBounds(120, 200, 270, 360);
+		btn_registro.setBounds((int)((frame_width_size * 9.64) / 100), button_y, button_width, button_height);
+		ImageIcon icon_registro = new ImageIcon(path + "btn_registro bien.png");  
+		Image newimg_registro = icon_registro.getImage().getScaledInstance(button_width, button_height, java.awt.Image.SCALE_SMOOTH);
+		btn_registro.setIcon(new ImageIcon(newimg_registro));
 		getFrmExpodent().getContentPane().add(btn_registro);
 	
 		
 		btnExpediente = new JButton("");
-		btnExpediente.setIcon(new ImageIcon(path + "btn_exp bien.png"));
+		//btnExpediente.setIcon(new ImageIcon(path + "btn_exp bien.png"));
 		btnExpediente.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				getFrmExpodent().setVisible(false);
@@ -137,12 +152,14 @@ public class ProgramaMama {
 			}
 			
 		});
-		btnExpediente.setBounds(480, 200, 270, 360);
+		btnExpediente.setBounds((int)((frame_width_size * 38.55) / 100), button_y, button_width, button_height);
+		ImageIcon icon_exp = new ImageIcon(path + "btn_exp bien.png");  
+		Image newimg_exp = icon_exp.getImage().getScaledInstance(button_width, button_height, java.awt.Image.SCALE_SMOOTH);
+		btnExpediente.setIcon(new ImageIcon(newimg_exp));
 		getFrmExpodent().getContentPane().add(btnExpediente);
 		
 		
 		btnReceta = new JButton("");
-		btnReceta.setIcon(new ImageIcon(path + "btn_receta bien.png"));
 		btnReceta.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				getFrmExpodent().setVisible(false);
@@ -154,13 +171,15 @@ public class ProgramaMama {
 				}
 			}
 		});
-		btnReceta.setBounds(840, 200, 270, 360);
+		btnReceta.setBounds((int)((frame_width_size * 67.47) / 100), button_y, button_width, button_height);
+		ImageIcon icon_receta = new ImageIcon(path + "btn_receta bien.png");  
+		Image newimg_receta = icon_receta.getImage().getScaledInstance(button_width, button_height, java.awt.Image.SCALE_SMOOTH);
+		btnReceta.setIcon(new ImageIcon(newimg_receta));
 		getFrmExpodent().getContentPane().add(btnReceta);
 		
 		
 		
 		btnRespaldo = new JButton("");
-		btnRespaldo.setIcon(new ImageIcon(path + "btn_respaldo bien.png"));
 		btnRespaldo.addActionListener(new ActionListener() {
 			// Accionar el metodo para respaldar la informacion
 			public void actionPerformed(ActionEvent e) {
@@ -175,8 +194,24 @@ public class ProgramaMama {
 				}
 			}
 		});
-		btnRespaldo.setBounds(480, 620, 300, 80);
+		btnRespaldo.setBounds((int)((frame_width_size * 38.55) / 100), (int)((frame_height_size * 84.82) / 100), (int)((frame_width_size * 24.1) / 100), (int)((frame_height_size * 10.94) / 100));
+		ImageIcon icon_respaldo = new ImageIcon(path + "btn_respaldo bien.png");  
+		Image newimg_respaldo = icon_respaldo.getImage().getScaledInstance(btnRespaldo.getWidth(), btnRespaldo.getHeight(), java.awt.Image.SCALE_SMOOTH);
+		btnRespaldo.setIcon(new ImageIcon(newimg_respaldo));
 		getFrmExpodent().getContentPane().add(btnRespaldo);
+		
+		
+		frmExpodent.addWindowListener(new java.awt.event.WindowAdapter() {
+		    @Override
+		    public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+		    	try {
+					Main.connection.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		    }
+		});
 }
 
 	/**
