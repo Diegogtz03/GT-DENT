@@ -15,6 +15,7 @@ import com.dropbox.core.v2.DbxClientV2;
 import com.dropbox.core.v2.files.UploadErrorException;
 
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -34,9 +35,12 @@ import org.apache.poi.ss.usermodel.WorkbookFactory;
 public class Main {
 	
 	static Connection connection;
-	private static final String ACCESS_TOKEN = "yVe6P-Jb0gYAAAAAAAAAAc-q_s6wjHWZXMfv5UFeBVROzcIBQ8FLhK-fN0o0erq3";
+	//private static final String ACCESS_TOKEN = "yVe6P-Jb0gYAAAAAAAAAAc-q_s6wjHWZXMfv5UFeBVROzcIBQ8FLhK-fN0o0erq3";
+	private static final String ACCESS_TOKEN = "t4qZWZFY57gAAAAAAAAAASmcH5IvDfn_xCU9tx_oqMyH6lIliDuCDQMoeTydXxIb";
 	public static DbxClientV2 client;
-	private static String path = "/Users/diegogutierrez/Desktop/TEC 5/Info III/Imagenes Programa/";
+	//private static String path = "/Users/diegogutierrez/Desktop/TEC 5/Info III/Imagenes Programa/";
+	private static String path = "C:/Program Files (x86)/GTDent/Temporary/";
+	
 
 	/**
 	 * El metodo main() inicializa las conexiones necesarias para el programa como lo es la conexion
@@ -44,6 +48,7 @@ public class Main {
 	 */
 	public static void main(String[] args) throws SQLException, DbxApiException, DbxException {
 		getConnection();
+		reseedValuesSequence();
 	}
 
 	
@@ -72,8 +77,35 @@ public class Main {
 
 	
 	public static void getDropBoxConnection() throws DbxApiException, DbxException {
-		DbxRequestConfig config = DbxRequestConfig.newBuilder("GT DENT/1.0").build();
+		DbxRequestConfig config = DbxRequestConfig.newBuilder("GT-DENT/1.0").build();
 		client = new DbxClientV2(config, ACCESS_TOKEN);
+	}
+	
+	public static void reseedValuesUno() throws SQLException {
+		String sql = "DECLARE @MAXVALUE INT SELECT @MAXVALUE = MAX(#) FROM PacientesTEST DBCC CHECKIDENT (PacientesTEST, RESEED, @MAXVALUE);";
+		PreparedStatement statement = connection.prepareStatement(sql);
+		statement.execute();
+	}
+	
+	public static void reseedValuesDos() throws SQLException {
+		String sql1 = "DECLARE @MAXVALUEUN INT SELECT @MAXVALUEUN = MAX(Id) FROM Expedientes DBCC CHECKIDENT (Expedientes, RESEED, @MAXVALUEUN);";
+		PreparedStatement statement = connection.prepareStatement(sql1);
+		statement.execute();
+	}
+	
+	public static void reseedValuesTres() throws SQLException {
+		String sql2 = "DECLARE @MAXVALUEDO INT SELECT @MAXVALUEDO = MAX(Id) FROM Odontograma DBCC CHECKIDENT (Odontograma, RESEED, @MAXVALUEDO);";
+		PreparedStatement statement = connection.prepareStatement(sql2);
+		statement.execute();
+	}
+	
+	public static void reseedValuesSequence() throws SQLException {
+		reseedValuesUno();
+		reseedValuesUno();
+		reseedValuesDos();
+		reseedValuesDos();
+		reseedValuesTres();
+		reseedValuesTres();
 	}
 	
 	/**
@@ -83,8 +115,7 @@ public class Main {
 	 */
 	public static void createLine(String name, String fNacimiento, String edad, String correo, String tel) throws SQLException {
 		String sql = "INSERT INTO PacientesTEST (fechaNacimiento, correo, edad, Nombre, telefono)"
-				   + "VALUES ('" +  fNacimiento + "', '" + correo + "', '" + edad + "', '" + name + "', '" + tel +"')";
-
+				   + " VALUES ('" +  fNacimiento + "', '" + correo + "', '" + edad + "', '" + name + "', '" + tel +"');";
 		Statement statement = connection.createStatement();
 		statement.executeUpdate(sql);
 		ExpedienteVacio();
@@ -107,7 +138,7 @@ public class Main {
 	 * de la tabla de pacientes limitados por ese nombre
 	 */
 	public static ResultSet refresh(String name) throws SQLException {
-		String sql = "SELECT * FROM PacientesTEST WHERE Nombre LIKE '" + name + "%'";
+		String sql = "SELECT * FROM PacientesTEST WHERE Nombre LIKE '%" + name + "%';";
 		Statement statement = connection.createStatement(); 
 		ResultSet result = statement.executeQuery(sql);
 		return result;
@@ -119,7 +150,7 @@ public class Main {
 	 * de nacimiento introducida
 	 */
 	public static ResultSet refreshConFecha(String fechaNacimiento) throws SQLException {
-		String sql = "SELECT * FROM PacientesTEST WHERE fechaNacimiento LIKE '" + fechaNacimiento + "%'";
+		String sql = "SELECT * FROM PacientesTEST WHERE fechaNacimiento LIKE '" + fechaNacimiento + "%';";
 		Statement statement = connection.createStatement(); 
 		ResultSet result = statement.executeQuery(sql);
 		return result;
@@ -130,9 +161,9 @@ public class Main {
 	 * se pide algun cambio de dato
 	 */
 	public static void updatePatient(String name, String fNacimiento, String edad, String correo, String tel, String i) throws SQLException {
-		String sql = "UPDATE PacientesTEST SET Nombre = '" + name + "', fechaNacimiento = '" + fNacimiento + "', edad = '" + edad + "', correo ='" + correo +  "', telefono ='" + tel +"' WHERE # = " + i;
+		String sql = "UPDATE PacientesTEST SET Nombre = '" + name + "', fechaNacimiento = '" + fNacimiento + "', edad = '" + edad + "', correo ='" + correo +  "', telefono ='" + tel +"' WHERE # = " + i +";";
 		Statement statement = connection.createStatement();
-		statement.execute(sql);
+		statement.executeUpdate(sql);
 	}
 	
 	/**
@@ -180,8 +211,8 @@ public class Main {
 	 */
 	private static void ExpedienteVacio() throws SQLException {
 		String sql = "INSERT INTO Expedientes (Diagnostico1, Diagnostico2, Diagnostico3, Diagnostico4, ProxCita, Antecedentes)"
-				+ "VALUES ('" +  "" + "', '" + "" + "', '" + "" + "', '" + "" + "', '" + "" + "', '" + "" + "')";
-		
+				+ " VALUES ('" +  "" + "', '" + "" + "', '" + "" + "', '" + "" + "', '" + "" + "', '" + "" + "');";
+		System.out.println(sql);
 		Statement statement = connection.createStatement();
 		statement.executeUpdate(sql);
 	}
@@ -213,7 +244,7 @@ public class Main {
 	 * vacia para que las tablas no queden mal enlazados
 	 */
 	public static void insertBlankOdontograma() throws SQLException {
-		String sql = "INSERT INTO Odontograma DEFAULT VALUES";
+		String sql = "INSERT INTO Odontograma DEFAULT VALUES;";
 		Statement statement = connection.createStatement();
 		statement.executeUpdate(sql);
 	}
@@ -257,7 +288,7 @@ public class Main {
 	 * de los expedientes de todos los pacientes
 	 */
 	public static ResultSet getAllExpedientes() throws SQLException {
-		String sql = "SELECT * FROM Expedientes";
+		String sql = "SELECT * FROM Expedientes;";
 		Statement statement = connection.createStatement();
 		ResultSet result = statement.executeQuery(sql);
 		return result;
@@ -268,7 +299,7 @@ public class Main {
 	 * de todos los odontogramas de todos los pacientes
 	 */
 	public static ResultSet getAllOdontogramas() throws SQLException {
-		String sql = "SELECT * FROM Odontograma";
+		String sql = "SELECT * FROM Odontograma;";
 		Statement statement = connection.createStatement();
 		ResultSet result = statement.executeQuery(sql);
 		return result;
