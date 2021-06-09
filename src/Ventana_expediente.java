@@ -10,9 +10,13 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.PlainDocument;
 
 import com.mysql.cj.protocol.Resultset;
 import com.mysql.cj.x.protobuf.MysqlxNotice.Frame;
@@ -28,6 +32,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 
 import javax.swing.JTextField;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.JTable;
 import javax.imageio.ImageIO;
 import javax.swing.ButtonGroup;
@@ -53,6 +58,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
@@ -76,7 +82,16 @@ public class Ventana_expediente extends JFrame {
 	private JLabel lblPaciente;
 	private JRadioButton radioBtnNombre;
 	private JRadioButton radioBtnNacimiento;
-	private static String path = "/Users/diegogutierrez/Desktop/TEC 5/Info III/Imagenes Programa/";
+	//private static String path = "/Users/diegogutierrez/Desktop/TEC 5/Info III/Imagenes Programa/";
+	private static String path = "C:/Program Files (x86)/GTDent/Images/";
+	
+	Toolkit toolkit =  Toolkit.getDefaultToolkit();
+	private Dimension screenSize = toolkit.getScreenSize();
+	private int resol = toolkit.getScreenResolution();
+	private double width = screenSize.width * 1.72;
+	private double height = screenSize.height * 1.72;
+	private int frame_width_size = (int)((width * 57.08) / 100);
+	private int frame_height_size = (int)((height * 52.61) / 100) + 30;
 
 	/**
 	 * Lanzar la aplicacion
@@ -104,24 +119,21 @@ public class Ventana_expediente extends JFrame {
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 		setTitle("EXPEDIENTES");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 1644, 947);
-		setLocation(dim.width/2 - getSize().width/2, dim.height/2- getSize().height/2);
+		setBounds(100, 100, frame_width_size, frame_height_size);
+		setLocation(dim.width/2 - getSize().width/2, (dim.height/2- getSize().height/2)-20);
 		contentPane = new JPanel() {
 
 			private static final long serialVersionUID = 1L;
 
-			/**
-			 * tomado de: 
-			 */
 			public void paintComponent( Graphics g ) {
 				  super.paintComponent(g);
 				  Graphics2D g2d = (Graphics2D) g;
 				  try {
-					InputStream image = new FileInputStream(path + "fondo 1.png");
+					  InputStream image = new FileInputStream(path + "fondo 1.png");
 					  BufferedImage src;
 					  try {
 						src = ImageIO.read(image);
-						g2d.drawImage(src, 0, 0, null);
+						g2d.drawImage(src, 0, 0, frame_width_size, frame_height_size, null);
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
@@ -135,19 +147,24 @@ public class Ventana_expediente extends JFrame {
 		contentPane.setLayout(null);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(100, 144, 468, 432);
+		scrollPane.setBounds((int)((frame_width_size * 6.1) / 100), (int)((frame_height_size * 15.37) / 100), (int)((frame_width_size * 28.47) / 100), (int)((frame_height_size * 46.1) / 100));
+		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		contentPane.add(scrollPane);
 		
 		textArea_diagnostico = new JTextArea();
+		textArea_diagnostico.setDocument(new JTextFIeldLimit(2000));
+		textArea_diagnostico.setWrapStyleWord(true);
+		textArea_diagnostico.setLineWrap(true);
 		textArea_diagnostico.setFont(new Font("Lucida Grande", Font.PLAIN, 15));
 		scrollPane.setViewportView(textArea_diagnostico);
 		
 		JLabel lblDiagnostico = new JLabel("DIAGNOSTICO");
-		lblDiagnostico.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
-		lblDiagnostico.setBounds(281, 100, 116, 32);
+		lblDiagnostico.setFont(new Font("Lucida Grande", Font.BOLD, 14));
+		lblDiagnostico.setBounds((int)((frame_width_size * 17.1) / 100), (int)((frame_height_size * 10.67) / 100), (int)((frame_width_size * 7.1) / 100) + 7, (int)((frame_height_size * 3.4) / 100));
 		contentPane.add(lblDiagnostico);
 		
 		button_right = new JButton(">");
+		button_right.setFont(new Font("Lucida Grande", Font.PLAIN, 6));
 		button_right.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (!textField.getText().isEmpty()) {
@@ -161,10 +178,11 @@ public class Ventana_expediente extends JFrame {
 				}
 			}
 		});
-		button_right.setBounds(535, 115, 25, 19);
+		button_right.setBounds((int)((frame_width_size * 32.54) / 100), (int)((frame_height_size * 12.27) / 100) - 4, (int)((frame_width_size * 1.52) / 100)+8, (int)((frame_height_size * 2.03) / 100) + 7);
 		contentPane.add(button_right);
 		
 		button_left = new JButton("<");
+		button_left.setFont(new Font("Lucida Grande", Font.PLAIN, 6));
 		button_left.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
@@ -174,7 +192,7 @@ public class Ventana_expediente extends JFrame {
 				}
 			}
 		});
-		button_left.setBounds(465, 115, 25, 19);
+		button_left.setBounds((int)((frame_width_size * 28.28) / 100)-8, (int)((frame_height_size * 12.27) / 100) - 4, (int)((frame_width_size * 1.52) / 100)+8, (int)((frame_height_size * 2.03) / 100) + 7);
 		contentPane.add(button_left);
 		button_left.setVisible(false);
 		
@@ -182,17 +200,19 @@ public class Ventana_expediente extends JFrame {
 		textField_Ndiagnostico.setEditable(false);
 		textField_Ndiagnostico.setHorizontalAlignment(SwingConstants.CENTER);
 		textField_Ndiagnostico.setText("1/4");
-		textField_Ndiagnostico.setBounds(493, 109, 40, 26);
+		textField_Ndiagnostico.setBounds((int)((frame_width_size * 29.98) / 100), (int)((frame_height_size * 11.63) / 100), (int)((frame_width_size * 2.43) / 100), (int)((frame_height_size * 2.77) / 100));
 		contentPane.add(textField_Ndiagnostico);
 		textField_Ndiagnostico.setColumns(10);
 		
 		JLabel lblProximaCita = new JLabel("PROXIMA CITA");
+		lblProximaCita.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
 		lblProximaCita.setHorizontalAlignment(SwingConstants.CENTER);
-		lblProximaCita.setBounds(100, 616, 98, 16);
+		lblProximaCita.setBounds((int)((frame_width_size * 6.08) / 100), (int)((frame_height_size * 65.74) / 100), (int)((frame_width_size * 5.96) / 100)+10, (int)((frame_height_size * 1.7) / 100));
 		contentPane.add(lblProximaCita);
 		
 		JLabel lblCuidados = new JLabel("ANTECEDENTES");
-		lblCuidados.setBounds(103, 702, 100, 16);
+		lblCuidados.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
+		lblCuidados.setBounds((int)((frame_width_size * 6.27) / 100), (int)((frame_height_size * 74.92) / 100), (int)((frame_width_size * 6.08) / 100)+17, (int)((frame_height_size * 1.71) / 100));
 		contentPane.add(lblCuidados);
 		
 		table_odontograma = new JTable(17, 4) {
@@ -248,15 +268,15 @@ public class Ventana_expediente extends JFrame {
 		
 		table_odontograma.setShowGrid(true);
 		table_odontograma.setGridColor(Color.BLACK);
-		table_odontograma.setBounds(800, 389, 655, 457);
+		table_odontograma.setBounds((int)((frame_width_size * 48.66) / 100), (int)((frame_height_size * 41.52) / 100) - 10, (int)((frame_width_size * 39.84) / 100), (int)((frame_height_size * 48.77) / 100) + 40);
 		contentPane.add(table_odontograma);
 		table_odontograma.setColumnSelectionAllowed(true);
 		table_odontograma.setCellSelectionEnabled(true);
 		table_odontograma.getColumnModel().getColumn(0).setPreferredWidth(35);
-		table_odontograma.getColumnModel().getColumn(2).setPreferredWidth(35);
-		table_odontograma.getColumnModel().getColumn(1).setPreferredWidth(292);
+		table_odontograma.getColumnModel().getColumn(2).setPreferredWidth(30);
+		table_odontograma.getColumnModel().getColumn(1).setPreferredWidth(310);
 		table_odontograma.getColumnModel().getColumn(3).setPreferredWidth(292);
-		table_odontograma.setRowHeight(27);
+		table_odontograma.setRowHeight(23);
 		
 		DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
 		centerRenderer.setHorizontalAlignment( JLabel.CENTER );
@@ -271,15 +291,19 @@ public class Ventana_expediente extends JFrame {
 			}
 
 		JLabel lblOdnontograma = new JLabel("ODONTOGRAMA");
-		lblOdnontograma.setFont(new Font("Lucida Grande", Font.BOLD, 16));
-		lblOdnontograma.setBounds(1067, 357, 148, 17);
+		lblOdnontograma.setFont(new Font("Lucida Grande", Font.BOLD, 14));
+		lblOdnontograma.setBounds((int)((frame_width_size * 64.9) / 100), (int)((frame_height_size * 38.1) / 100)-8, (int)((frame_width_size * 9) / 100), (int)((frame_height_size * 1.81) / 100));
 		contentPane.add(lblOdnontograma);
 		
 		JScrollPane scrollPane_1 = new JScrollPane();
-		scrollPane_1.setBounds(800, 145, 655, 192);
+		scrollPane_1.setBounds((int)((frame_width_size * 48.66) / 100), (int)((frame_height_size * 15.47) / 100), (int)((frame_width_size * 39.84) / 100), (int)((frame_height_size * 20.49) / 100));
 		contentPane.add(scrollPane_1);
 		
-		table_1 = new JTable();
+		table_1 = new JTable(){
+			public boolean isCellEditable(int row, int column) {
+		        return false;
+		    }
+		};
 		table_1.setRowSelectionAllowed(false);
 		table_1.setGridColor(Color.BLACK);
 		table_1.setBackground(Color.WHITE);
@@ -313,8 +337,8 @@ public class Ventana_expediente extends JFrame {
 		scrollPane_1.setViewportView(table_1);
 		
 		JLabel lblBuscarPaciente = new JLabel("Buscar Paciente");
-		lblBuscarPaciente.setFont(new Font("Lucida Grande", Font.PLAIN, 17));
-		lblBuscarPaciente.setBounds(903, 117, 135, 16);
+		lblBuscarPaciente.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
+		lblBuscarPaciente.setBounds((int)((frame_width_size * 54.93) / 100), (int)((frame_height_size * 12.49) / 100), (int)((frame_width_size * 8.2) / 100), (int)((frame_height_size * 1.71) / 100));
 		contentPane.add(lblBuscarPaciente);
 		
 		textField_busqueda = new JTextField();
@@ -339,7 +363,7 @@ public class Ventana_expediente extends JFrame {
 			}
 			
 		});
-		textField_busqueda.setBounds(1044, 112, 225, 28);
+		textField_busqueda.setBounds((int)((frame_width_size * 63.5) / 100), (int)((frame_height_size * 11.95) / 100), (int)((frame_width_size * 13.69) / 100), (int)((frame_height_size * 2.99) / 100));
 		contentPane.add(textField_busqueda);
 		textField_busqueda.setColumns(10);
 		
@@ -363,16 +387,16 @@ public class Ventana_expediente extends JFrame {
 				ProgramaMama.getFrmExpodent().setVisible(true);	
 			}
 		});
-		btnBack.setBounds(35, 19, 60, 57);
+		btnBack.setBounds((int)((frame_width_size * 2.13) / 100), (int)((frame_height_size * 2.03) / 100), (int)((frame_width_size * 3.65) / 100), (int)((frame_height_size * 6.08) / 100));
 		contentPane.add(btnBack);
 		
 		textField_prox_cita = new JTextField();
-		textField_prox_cita.setBounds(100, 631, 468, 50);
+		textField_prox_cita.setBounds((int)((frame_width_size * 6.08) / 100), (int)((frame_height_size * 67.34) / 100), (int)((frame_width_size * 28.47) / 100), (int)((frame_height_size * 5.34) / 100));
 		contentPane.add(textField_prox_cita);
 		textField_prox_cita.setColumns(10);
 		
 		textField_cuidados = new JTextField();
-		textField_cuidados.setBounds(100, 720, 468, 57);
+		textField_cuidados.setBounds((int)((frame_width_size * 6.08) / 100), (int)((frame_height_size * 76.84) / 100), (int)((frame_width_size * 28.47) / 100), (int)((frame_height_size * 6.08) / 100));
 		contentPane.add(textField_cuidados);
 		textField_cuidados.setColumns(10);
 		
@@ -395,19 +419,19 @@ public class Ventana_expediente extends JFrame {
 				}
 			}
 		});
-		btnCrear.setBounds(228, 805, 169, 63);
+		btnCrear.setBounds((int)((frame_width_size * 13.87) / 100), (int)((frame_height_size * 85.91) / 100) - 10, (int)((frame_width_size * 10.28) / 100), (int)((frame_height_size * 6.72) / 100));
 		contentPane.add(btnCrear);
-		textField = new JTextField();
+		textField = new JTextField(0);
 		textField.setHorizontalAlignment(SwingConstants.CENTER);
 		textField.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
 		textField.setEditable(false);
-		textField.setBounds(1499, 44, 55, 40);
+		textField.setBounds((int)((frame_width_size * 91.18) / 100), (int)((frame_height_size * 4.7) / 100), (int)((frame_width_size * 3.35) / 100), (int)((frame_height_size * 4.27) / 100));
 		contentPane.add(textField);
 		textField.setColumns(10);
 		
 		lblPaciente = new JLabel("# paciente");
-		lblPaciente.setFont(new Font("Lucida Grande", Font.PLAIN, 15));
-		lblPaciente.setBounds(1411, 51, 76, 26);
+		lblPaciente.setFont(new Font("Lucida Grande", Font.PLAIN, 13));
+		lblPaciente.setBounds((int)((frame_width_size * 85.82) / 100), (int)((frame_height_size * 5.44) / 100), (int)((frame_width_size * 4.62) / 100)+5, (int)((frame_height_size * 2.77) / 100));
 		contentPane.add(lblPaciente);
 		
 		radioBtnNombre = new JRadioButton("Nombre");
@@ -418,7 +442,7 @@ public class Ventana_expediente extends JFrame {
 			}
 		});
 		radioBtnNombre.setSelected(true);
-		radioBtnNombre.setBounds(1287, 98, 141, 23);
+		radioBtnNombre.setBounds((int)((frame_width_size * 78.28) / 100), (int)((frame_height_size * 10.46) / 100), (int)((frame_width_size * 8.58) / 100), (int)((frame_height_size * 2.45) / 100));
 		contentPane.add(radioBtnNombre);
 		
 		radioBtnNacimiento = new JRadioButton("Fecha Nacimiento");
@@ -428,7 +452,7 @@ public class Ventana_expediente extends JFrame {
 					radioBtnNombre.setSelected(false);
 			}
 		});
-		radioBtnNacimiento.setBounds(1287, 120, 148, 23);
+		radioBtnNacimiento.setBounds((int)((frame_width_size * 78.28) / 100), (int)((frame_height_size * 12.8) / 100), (int)((frame_width_size * 9) / 100), (int)((frame_height_size * 2.45) / 100));
 		contentPane.add(radioBtnNacimiento);
 		
 		
@@ -451,7 +475,7 @@ public class Ventana_expediente extends JFrame {
 				}
 			}
 		});
-		btnReceta.setBounds(254, 880, 117, 29);
+		btnReceta.setBounds((int)((frame_width_size * 15.45) / 100), (int)((frame_height_size * 93.92) / 100) - 15, (int)((frame_width_size * 7.12) / 100), (int)((frame_height_size * 3.1) / 100));
 		contentPane.add(btnReceta);
 	}
 	
@@ -613,12 +637,12 @@ public class Ventana_expediente extends JFrame {
 	
 	public void resizeColumns() {
 		table_1.getColumnModel().getColumn(2).setHeaderValue("fecha de nacimiento");
-		table_1.getColumnModel().getColumn(0).setPreferredWidth(14);
-		table_1.getColumnModel().getColumn(1).setPreferredWidth(146);
-		table_1.getColumnModel().getColumn(2).setPreferredWidth(136);
+		table_1.getColumnModel().getColumn(0).setPreferredWidth(34);
+		table_1.getColumnModel().getColumn(1).setPreferredWidth(126);
+		table_1.getColumnModel().getColumn(2).setPreferredWidth(96);
 		table_1.getColumnModel().getColumn(3).setPreferredWidth(20);
-		table_1.getColumnModel().getColumn(4).setPreferredWidth(106);
-		table_1.getColumnModel().getColumn(4).setPreferredWidth(136);
+		table_1.getColumnModel().getColumn(4).setPreferredWidth(96);
+		table_1.getColumnModel().getColumn(4).setPreferredWidth(126);
 	}
 	
 	
@@ -645,5 +669,28 @@ public class Ventana_expediente extends JFrame {
 		receta.setVisible(true);
 		this.dispose();
 		
+	}
+	
+	
+	class JTextFIeldLimit extends PlainDocument {
+		private int limit;
+		JTextFIeldLimit(int limit) {
+			super();
+			this.limit = limit;
+		}
+		
+		JTextFIeldLimit(int limit, boolean upper) {
+			super();
+			this.limit = limit;
+		}
+		
+		public void insertString(int offset, String str, AttributeSet attr) throws BadLocationException {
+			if (str == null)
+				return;
+			
+			if ((getLength() + str.length()) <= limit) {
+				super.insertString(offset, str, attr);
+			}
+		}
 	}
 }
