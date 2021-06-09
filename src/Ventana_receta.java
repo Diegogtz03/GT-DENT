@@ -81,7 +81,18 @@ public class Ventana_receta extends JFrame {
 	private JTextField textField_nombre;
 	private JTextField textField_fecha;
 	private JTextArea textArea_contenido;
-	private static String path = "/Users/diegogutierrez/Desktop/TEC 5/Info III/Imagenes Programa/";
+	//private static String path = "/Users/diegogutierrez/Desktop/TEC 5/Info III/Imagenes Programa/";
+	private static String path = "C:/Program Files (x86)/GTDent/Images/";
+	private static String pathfile = "C:/Program Files (x86)/GTDent/Files/";
+	private static String pathtmp = "C:/Program Files (x86)/GTDent/Temporary/";
+	
+	Toolkit toolkit =  Toolkit.getDefaultToolkit();
+	private Dimension screenSize = toolkit.getScreenSize();
+	private int resol = toolkit.getScreenResolution();
+	private double width = screenSize.width * 1.72;
+	private double height = screenSize.height * 1.72;
+	private int frame_width_size = (int)((width * 57.08) / 100);
+	private int frame_height_size = (int)((height * 52.61) / 100) + 30;
 
 	/**
 	 * Launch the application.
@@ -109,8 +120,8 @@ public class Ventana_receta extends JFrame {
 	public Ventana_receta() throws IOException {
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 1644, 947);
-		setLocation(dim.width/2 - getSize().width/2, dim.height/2- getSize().height/2);
+		setBounds(100, 100, frame_width_size, frame_height_size);
+		setLocation(dim.width/2 - getSize().width/2, (dim.height/2- getSize().height/2)-20);
 		/**
 		 * tomado de... 
 		 */
@@ -123,7 +134,7 @@ public class Ventana_receta extends JFrame {
 					  BufferedImage src;
 					  try {
 						src = ImageIO.read(image);
-						g2d.drawImage(src, 0, 0, null);
+						g2d.drawImage(src, 0, 0, frame_width_size, frame_height_size, null);
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -148,18 +159,18 @@ public class Ventana_receta extends JFrame {
 			}
 		});
 		btn_regresar.setFont(new Font("Lucida Grande", Font.BOLD, 24));
-		btn_regresar.setBounds(53, 43, 94, 86);
+		btn_regresar.setBounds((int)((frame_width_size * 3.22) / 100), (int)((frame_height_size * 4.6) / 100), (int)((frame_width_size * 5.7) / 100), (int)((frame_height_size * 9.18) / 100));
 		contentPane.add(btn_regresar);
 		
 		textField_nombre = new RoundJTextField(15);
-		textField_nombre.setBounds(510, 229, 241, 32);
+		textField_nombre.setBounds((int)((frame_width_size * 31.02) / 100), (int)((frame_height_size * 24.44) / 100), (int)((frame_width_size * 14.66) / 100), (int)((frame_height_size * 3.42) / 100));
 		contentPane.add(textField_nombre);
 		textField_nombre.setColumns(10);
 		Border borde = BorderFactory.createLineBorder(Color.black);
 		textField_nombre.setBorder(borde);
 		
 		textField_fecha = new RoundJTextField(15);
-		textField_fecha.setBounds(898, 195, 142, 32);
+		textField_fecha.setBounds((int)((frame_width_size * 54.62) / 100), (int)((frame_height_size * 20.81) / 100), (int)((frame_width_size * 8.64) / 100), (int)((frame_height_size * 3.42) / 100));
 		contentPane.add(textField_fecha);
 		textField_fecha.setColumns(10);
 		textField_fecha.setBorder(borde);
@@ -178,7 +189,7 @@ public class Ventana_receta extends JFrame {
 			}
 		});
 		btnImprimir.setBackground(SystemColor.textHighlight);
-		btnImprimir.setBounds(1182, 340, 332, 174);
+		btnImprimir.setBounds((int)((frame_width_size * 71.9) / 100), (int)((frame_height_size * 36.29) / 100), (int)((frame_width_size * 20.19) / 100), (int)((frame_height_size * 18.57) / 100));
 		contentPane.add(btnImprimir);
 		
 		JButton btnVaciar = new JButton("VACIAR");
@@ -191,11 +202,11 @@ public class Ventana_receta extends JFrame {
 				textArea_contenido.setText("");
 			}
 		});
-		btnVaciar.setBounds(1261, 541, 184, 60);
+		btnVaciar.setBounds((int)((frame_width_size * 76.70) / 100), (int)((frame_height_size * 57.74) / 100), (int)((frame_width_size * 11.19) / 100), (int)((frame_height_size * 6.4) / 100));
 		contentPane.add(btnVaciar);	
 		
 		textArea_contenido = new JTextArea();
-		textArea_contenido.setBounds(457, 363, 528, 354);
+		textArea_contenido.setBounds((int)((frame_width_size * 27.8) / 100), (int)((frame_height_size * 38.74) / 100), (int)((frame_width_size * 32.1) / 100), (int)((frame_height_size * 37.78) / 100));
 		contentPane.add(textArea_contenido);
 		textArea_contenido.setBorder(borde);
 		
@@ -206,7 +217,7 @@ public class Ventana_receta extends JFrame {
 				ponerFecha();
 			}
 		});
-		btnDaDeHoy.setBounds(1299, 613, 117, 29);
+		btnDaDeHoy.setBounds((int)((frame_width_size * 79) / 100), (int)((frame_height_size * 65.42) / 100), (int)((frame_width_size * 7.12) / 100), (int)((frame_height_size * 3.1) / 100));
 		contentPane.add(btnDaDeHoy);
 	}
 	
@@ -222,7 +233,7 @@ public class Ventana_receta extends JFrame {
 		String contenido = textArea_contenido.getText();
 		
 		//se carga el archivo .pdf para asi agregar el contenido de las variables
-		File archivo = new File(path + "Receta.pdf");
+		File archivo = new File(pathfile + "Receta.pdf");
 		PDDocument recetaArchivo = PDDocument.load(archivo);
 		PDPage recetaPagina = recetaArchivo.getPage(0);
 		PDPageContentStream escritura = new PDPageContentStream(recetaArchivo, recetaPagina, PDPageContentStream.AppendMode.APPEND, true, true);
@@ -263,7 +274,7 @@ public class Ventana_receta extends JFrame {
 		escritura.close();
 		
 		//se guarda el archivo editado a un archivo temporal
-		recetaArchivo.save(path + "RecetaFINAL.pdf");
+		recetaArchivo.save(pathtmp + "RecetaFINAL.pdf");
 
 		//se manda a imprimir el archivo
 		try {
@@ -282,8 +293,8 @@ public class Ventana_receta extends JFrame {
 	 */
 	private static void printPDF() throws IOException, PrinterException {
 		//se carga el archivo editado por el metodo cargarPdf()
-		File f = new File(path + "RecetaFINAL.pdf");
-		f.setReadOnly();
+		File f = new File(pathtmp + "RecetaFINAL.pdf");
+		//f.setReadOnly();
 		PDDocument docFinal = PDDocument.load(f);
 		
 		//se genera un trabajo de impreseion y se pide la informacion al cliente
