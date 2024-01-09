@@ -1,3 +1,6 @@
+**NEW WEB VERSION**: 
+https://github.com/Diegogtz03/GT-Dent-V2.git
+
 # GT-DENT
 GT-DENT is a Dental Patient Records App which came to be as a help for my parents' dental office.
 
